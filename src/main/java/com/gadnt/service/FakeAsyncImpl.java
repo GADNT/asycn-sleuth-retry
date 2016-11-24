@@ -25,8 +25,11 @@ public class FakeAsyncImpl implements FakeAsyncService {
     @Override
     public String getAFakeAsyncResponse() throws Exception {
         log.info("get in fake serviceImpl");
+
         Span span = this.tracer.createSpan("fake-service-impl");
+
         tracer.close(span);
+
         return fakeAsyncObject.getAFakeAsyncResponse();
     }
 }
