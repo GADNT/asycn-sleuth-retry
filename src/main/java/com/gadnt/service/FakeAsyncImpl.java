@@ -5,7 +5,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.sleuth.Span;
 import org.springframework.cloud.sleuth.Tracer;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
+
+import java.util.concurrent.Future;
 
 /**
  * @author gabriel.deaconu
@@ -22,8 +28,10 @@ public class FakeAsyncImpl implements FakeAsyncService {
     @Autowired
     Tracer tracer;
 
+    @Async
+    @Retryable(include = {RestClientException.class}, maxAttempts = 5, backoff = @Backoff(delay = 2000) )
     @Override
-    public String getAFakeAsyncResponse() throws Exception {
+    public Future<String> getAFakeAsyncResponse() throws Exception {
         log.info("get in fake serviceImpl");
 
         Span span = this.tracer.createSpan("fake-service-impl");

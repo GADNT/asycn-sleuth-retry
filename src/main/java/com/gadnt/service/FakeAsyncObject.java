@@ -5,10 +5,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.sleuth.Span;
 import org.springframework.cloud.sleuth.Tracer;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 
 import java.util.Random;
+import java.util.concurrent.Future;
 import java.util.stream.IntStream;
 
 /**
@@ -23,7 +25,7 @@ public class FakeAsyncObject {
     @Autowired
     Tracer tracer;
 
-    String getAFakeAsyncResponse() throws Exception {
+    Future<String> getAFakeAsyncResponse() throws Exception {
 
         Span span = this.tracer.createSpan("fake-async-obj");
         log.info("get in fake object");
@@ -39,6 +41,6 @@ public class FakeAsyncObject {
             tracer.close(span);
         }
 
-        return "fakeResult";
+        return new AsyncResult<>("fakeResult");
     }
 }

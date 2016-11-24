@@ -1,9 +1,6 @@
 package com.gadnt.service;
 
-import org.springframework.retry.annotation.Backoff;
-import org.springframework.retry.annotation.Retryable;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.web.client.RestClientException;
+import java.util.concurrent.Future;
 
 /**
  * @author gabriel.deaconu
@@ -11,7 +8,5 @@ import org.springframework.web.client.RestClientException;
  */
 public interface FakeAsyncService {
 
-    @Async
-    @Retryable(include = {RestClientException.class}, maxAttempts = 5, backoff = @Backoff(delay = 2000) )
-    String getAFakeAsyncResponse() throws Exception;
+    Future<String> getAFakeAsyncResponse() throws Exception;
 }

@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.concurrent.Future;
+
 /**
  * @since gabriel.deaconu
  */
@@ -36,7 +38,8 @@ public class FakeResource {
         try {
             log.info("*** we are gonna get a fake ***");
 
-            String aFakeAsyncResponse = fakeAsyncService.getAFakeAsyncResponse();
+            Future<String> fAsync = fakeAsyncService.getAFakeAsyncResponse();
+            String aFakeAsyncResponse = fAsync.get();
 
             reqBody = "{\"message\": \"" + aFakeAsyncResponse + "\" }";
             return new ResponseEntity<>(reqBody, HttpStatus.OK);
